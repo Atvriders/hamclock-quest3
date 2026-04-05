@@ -25,7 +25,9 @@ jobs:
 
       - name: Generate Gradle Wrapper
         run: |
-          gradle wrapper --gradle-version 8.5
+          if [ ! -f ./gradlew ]; then
+            gradle wrapper --gradle-version 8.9
+          fi
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
