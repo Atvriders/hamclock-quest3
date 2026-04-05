@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -46,3 +48,24 @@ jobs:
         with:
           name: hamclock-quest3-release
           path: app/build/outputs/apk/release/*.apk
+
+      - name: Create Release
+        if: github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: HamClock Quest 3 — Build ${{ github.run_number }}
+          body: |
+            HamClock Reborn for Meta Quest 3
+
+            **Install:** Download the APK below and sideload via SideQuest or ADB:
+            ```
+            adb install hamclock-quest3.apk
+            ```
+          files: |
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/release/app-release-unsigned.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
